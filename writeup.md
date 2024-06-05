@@ -134,7 +134,7 @@ For simplicity, here are the steps used to get the reverse shell:
 3. After this set up, since Its possible to intercept, and alter the Training Request text and plug the malicious script.
    ![payload_packet intercept](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/73b59298-5761-4f65-8e3d-83f371a37b3d)
 4. Before we Forward the response, we set up a listener on port 4444 (Or the port you set up a netcat listener).
-   ```bash
+```bash
 sudo rlwrap nc -lnvp 4444
 
 ```
