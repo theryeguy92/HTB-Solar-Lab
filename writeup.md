@@ -171,8 +171,75 @@ As this is not the most flattering snapshot, we can deduct the following informa
 
 However, in order to escalate our privaleges, we will have to pivot to another user. This is because Blake does not have root privleges.
 
-When exploring, we discovered a user named openfire via the Get-LocalUser command.
+When exploring, we discovered a user named openfire via the Get-LocalUser command. After some googling, we discover that openfire is a instant messaging and group chat server. The Services that Openfire provides run on ports 9090 and 9091.
 
+I confirmed this via the command below, which gives us a IP and port of of 127.0.0.1:9090.
+```
+C:\users\blake\desktop> netstat -ano | findstr "9090"
+
+  TCP    127.0.0.1:9090         0.0.0.0:0              LISTENING       2244
+
+```
+In order to get access to openfire, we will have to navigate to port 9090 or port 9091. We will have to tunnel via reverse port forwarding to those ports. To help us, Chisel is a great tool that helps with reverse port forwarding. We can simply clone the respratory from github, execute the build, then upload the windows.exe to execute the port forwarding.
+
+![chisel build](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/99cb98ad-0103-44e1-bf88-1f8d752bfa14)
+
+After we complete the build and installation, we will run the command below to open a reverse port forward from our machines side.
+
+Attacker Machine (our Machine):
+
+![port forward](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/61738fa0-309b-4995-9bfa-dedf125173cd)
+
+
+Victim Machine (command hilighted below):
+![port forward windows_final_cmd](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/ad4fc910-1c6f-4b68-93cc-4ea6408ab6ab)
+
+
+Once we see a connection on the attacking machine's side, after typing localhost:9090 into a web browser we are greeted with an openfire login page.
+
+![Openfire_login](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/ccdb2904-c4e5-4e6c-87b6-71243ddb8475)
+
+
+Eventhough we don't have any leads regarding logins specific to a Openfire login, we can use an exploit via CVE-2023-32315 which can bypass the authentication.
+
+![CVE_2023_32315](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/6c89ee42-5b9e-43fa-a5f6-9535b3141b0b)
+
+
+Now we have a user name and password we can use to log into openfire.
+
+![password for openfire via CVE_2023_3215](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/f842cc9a-1aa2-4bb1-9374-cb837859ece1)
+
+
+Once we use our credentials we are greeted with the openfire GUI.
+
+![openfire_we_are_in](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/046a66d4-a263-49ca-90d9-82444f688836)
+
+For the exploit we just used. there is a .jar plugin that we can upload which will give us a server management tool. As we see, the default password is 123.
+
+![upload vulnrable plugin](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/a865670a-67b3-4ae8-a756-1ad1a3d26dea)
+
+The management tool can be found by going to the home GUI page, server -> server_setting -> management tools.
+
+![openfire managment tool](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/726b789d-009f-4bc8-86a2-e49679d40f3e)
+
+We can use the dropdown bar and select system command. Here we can execute commands like we could on the command prompt.
+
+![result_of_system_command](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/aeb65987-09d1-48ea-852e-1c3e32701222)
+
+We can use the same technique as we did before to get a reverse shell as blake. We will simply just use the reverse shell generator as we did above, plug it in the command GUI and use net cat as a listener.
+
+
+
+We have officially pivoted from blake to openfire. After some inital exploring, I didn't see any interesting files. However unlike blake, we are able to use a file called RunasCs.exe. Essentially, we will be able to run commands that will be outside our normal permissions. From the password list we pulled from the excel, I kept on trying each one as Administrator until I got a hit.
+
+Once confirmed, given how unstable the shell was for this lab, I searched for the root file to confirm that it was under the user Administrator.
+
+![search for root](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/307e9c9e-bff4-4040-ba48-e3dfcf578682)
+
+After confirmation, I ran another command as administrator to pull the rootflag.
+
+
+![root_flag_copy](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/30a144ab-8751-4972-9089-d871b5e2a5ce)
 
 
 
