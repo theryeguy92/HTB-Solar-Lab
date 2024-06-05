@@ -144,6 +144,7 @@ After completing these above steps, we not have a foothold within the network
 
 
 From our foothold, we see that we are logged in as the user blake
+
 ![whoami_blake](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/70c5dd34-2c3d-4730-9c7e-6d4a461426be)
 
 
