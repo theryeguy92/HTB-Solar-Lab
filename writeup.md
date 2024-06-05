@@ -1,9 +1,5 @@
 # Solar Lab Write Up
 
-## HTB Machine: SolarLab
-## Dificulty: Medium
-## Operating System: Windows
-
 # Intro
 For this Hack the Box (HTB) machine, techniques such as Enumeration, user pivoting, and privaledge escalation were used in order to obtain both the user and root flags.
 
@@ -124,7 +120,63 @@ Now we are able to log into the ReportHub Dashboard.
 
 ![blakeb_dashboard](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/dcb4d6a1-d80f-405b-b22d-745acca5e1ea)
 
-#Post-Exploitation
+## Post-Exploitation
+
+After some analysis, each of the options generate a pdf. There is a vulnrability (CVE-2023-33733) that will exploit the pdf generating ability, of which will allow us to get a reverse shell into the local network.
+
+To do so, I simply used a reverse shell generator and plugged in the payload into the python script.
+
+For simplicity, here are the steps used to get the reverse shell:
+
+1. Used a Reverse Shell Generator: https://www.revshells.com/
+2. Plug in the payload (illustrated below) in the python script: https://github.com/c53elyas/CVE-2023-33733
+   ![payload_python](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/f1b423e7-747c-449f-9c06-c081c69fae6b)
+3. After this set up, since Its possible to intercept, and alter the Training Request text and plug the malicious script.
+   ![payload_packet intercept](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/73b59298-5761-4f65-8e3d-83f371a37b3d)
+4. Before we Forward the response, we set up a listener on port 4444 (Or the port you set up a netcat listener).
+   ```bash
+sudo rlwrap nc -lnvp 4444
+
+```
+
+After completing these above steps, we not have a foothold within the network
+![foothold_solar_lab](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/85edbe45-1b2f-405c-b131-1b6fb6ffce5c)
+
+From our foothold, we see that we are logged in as the user blake
+![whoami_blake](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/70c5dd34-2c3d-4730-9c7e-6d4a461426be)
+
+
+## Foothold
+
+With the foothold estabilished, we begin to explore directories. In doing so, we are able to capture the user flag.
+
+![userflag_found](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/5ac39860-546c-421f-9c9c-14e967856df1)
+
+
+In one of the directories, we discovered a user.db file. We can use the type command to get user login information.
+
+![credentials_unlocked](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/a1369303-23a7-4c7b-a902-fd546592784e)
+
+As this is not the most flattering snapshot, we can deduct the following information:
+
+```
+ user			    pass
+ alexanderk		HotP!fireguard
+ 007poiuytrewq		claudias007
+ blakeb			ThisCanB3typedeasily1@
+
+```
+
+However, in order to escalate our privaleges, we will have to pivot to another user. This is because Blake does not have root privleges.
+
+When exploring, we discovered a user named openfire via the Get-LocalUser command.
+
+
+
+
+
+
+
 
 
 
