@@ -169,7 +169,9 @@ As this is not the most flattering snapshot, we can deduct the following informa
 
 ```
 
-However, in order to escalate our privaleges, we will have to pivot to another user. This is because Blake does not have root privleges.
+However, in order to escalate our privaleges, we will have to pivot to another user in hopes to further escalate our privaleges.
+
+## Pivoting 
 
 When exploring, we discovered a user named openfire via the Get-LocalUser command. After some googling, we discover that openfire is a instant messaging and group chat server. The Services that Openfire provides run on ports 9090 and 9091.
 
@@ -228,7 +230,7 @@ We can use the dropdown bar and select system command. Here we can execute comma
 
 We can use the same technique as we did before to get a reverse shell as blake. We will simply just use the reverse shell generator as we did above, plug it in the command GUI and use net cat as a listener.
 
-
+## Post exploitation and Root Flag
 
 We have officially pivoted from blake to openfire. After some inital exploring, I didn't see any interesting files. However unlike blake, we are able to use a file called RunasCs.exe. Essentially, we will be able to run commands that will be outside our normal permissions. From the password list we pulled from the excel, I kept on trying each one as Administrator until I got a hit.
 
