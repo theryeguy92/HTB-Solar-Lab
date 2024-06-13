@@ -78,7 +78,8 @@ getting file \details-file.xlsx of size 12793 as details-file.xlsx (94.6 KiloByt
 ## Exploitation
 After looking at the details-file.xlsx, we see that we have a list of logins, social security numbers, and various other personal details of the staff in Solar Labs.
 
-![training_snapshot](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/c024a648-2cc9-4512-8d25-77587bd98914)
+![details_file](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/47ab6e8e-8c80-47fb-b59b-29f78e0f1d28)
+
 
 
 
