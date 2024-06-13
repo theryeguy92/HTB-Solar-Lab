@@ -30,7 +30,7 @@ PORT     STATE SERVICE
 }
 ```
 
-It is interesting to see that port 6791 is open. After research, I found that hnm is Halcyon Network Manager. With that I went to the page and saw a login page for a ReportLab/ReportHub login.
+It is interesting to see that port 6791 is open. After research, I found that hnm is Halcyon Network Manager. I went to the page and saw a login page for a ReportLab/ReportHub login.
 
 This will be usefull for later. In the meantime, port 445 was open and was explored in hopes of finding an exploit. Crackmapexec was used to make an attempt to log in as a guest via smb.
 
