@@ -75,7 +75,7 @@ smb: \> get details-file.xlsx
 getting file \details-file.xlsx of size 12793 as details-file.xlsx (94.6 KiloBytes/sec) (average 94.6 KiloBytes/sec)
 
 ```
-## Exploitation
+## Avenue of Exploitation
 After looking at the details-file.xlsx, we see that we have a list of logins, social security numbers, and various other personal details of the staff in Solar Labs.
 
 ![details_file](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/47ab6e8e-8c80-47fb-b59b-29f78e0f1d28)
