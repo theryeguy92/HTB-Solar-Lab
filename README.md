@@ -78,7 +78,8 @@ getting file \details-file.xlsx of size 12793 as details-file.xlsx (94.6 KiloByt
 ## Exploitation
 After looking at the details-file.xlsx, we see that we have a list of logins, social security numbers, and various other personal details of the staff in Solar Labs.
 
-*** Put picture here ***
+![training_snapshot](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/c024a648-2cc9-4512-8d25-77587bd98914)
+
 
 
 Now that it is posible to access port 445 anonymously, we can use crackmapexec to brute force Relative Identifiers.
