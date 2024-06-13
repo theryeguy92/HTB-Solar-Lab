@@ -234,9 +234,18 @@ We can use the same technique as we did before to get a reverse shell as blake. 
 
 ## Post exploitation and Root Flag
 
-We have officially pivoted from blake to openfire. After some inital exploring, I didn't see any interesting files. However unlike blake, we are able to use a file called RunasCs.exe. Essentially, we will be able to run commands that will be outside our normal permissions. From the password list we pulled from the excel, I kept on trying each one as Administrator until I got a hit.
+We have officially pivoted from blake to openfire. After looking around in the directory, we see "embedded-db" which looks promising. After using the type command, we will get an encrypted Administrator password.
 
-Once confirmed, given how unstable the shell was for this lab, I searched for the root file to confirm that it was under the user Administrator.
+![image](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/429f7dfd-d135-407d-8698-d82e59e18fd9)
+
+
+![image](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/686a2f50-5cb8-41ee-9e5e-341e907dde2f)
+
+We also discover a password key in openfire.script. We can easily decript the openfire password hash via the openfire_decrypt tool in the link below. Once we have that, we will have the administrator password.
+
+https://github.com/c0rdis/openfire_decrypt?source=post_page-----05ea59f2b950--------------------------------
+
+Given how unstable the shell was for this lab, I searched for the root file to confirm that it was under the user Administrator.
 
 ![search for root](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/307e9c9e-bff4-4040-ba48-e3dfcf578682)
 
