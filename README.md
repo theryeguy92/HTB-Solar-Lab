@@ -102,7 +102,7 @@ SMB         solarlab.htb    445    SOLARLAB         1001: SOLARLAB\openfire (Sid
 
 ```
 
-We see that blake si a user, of which we found his login information within the excel file. With this information, we should be able to brute force the ReportHub login via Hydra.
+We see that blake is a user, of which we found his login information within the excel file. With this information, we should be able to brute force the ReportHub login via Hydra.
 
 
 ```bash
@@ -141,11 +141,11 @@ sudo rlwrap nc -lnvp 4444
 
 ```
 
-After completing these above steps, we not have a foothold within the network
+After completing these above steps, we not have a foothold within the network.
 ![foothold_solar_lab](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/85edbe45-1b2f-405c-b131-1b6fb6ffce5c)
 
 
-From our foothold, we see that we are logged in as the user blake
+From our foothold, we see that we are logged in as the user blake.
 
 ![whoami_blake](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/70c5dd34-2c3d-4730-9c7e-6d4a461426be)
 
