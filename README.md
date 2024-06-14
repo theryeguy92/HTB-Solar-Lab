@@ -1,17 +1,17 @@
 # Solar Lab Write Up
 
 # Intro
-For this Hack the Box (HTB) machine, techniques such as Enumeration, user pivoting, and privaledge escalation were used in order to obtain both the user and root flags.
+For this Hack the Box (HTB) machine, techniques such as Enumeration, user pivoting, and privilege escalation were used to obtain both the user and root flags.
 
 Below you can find of the tools that I used to complete this challenge
 1. Kali Linux: An operating system that specializes in penetration testing.
-2. Nmap: An open-source toolf for network exploration, along with security auditing
-3. Crackmapexec: Automates the active directory of networks. THis can be used for Password Spraying, Credential Validation and Command Execution.
-4. Hydra: A well known login cracker that is used for Brute Force Attacks.
+2. Nmap: An open-source tool for network exploration, along with security auditing
+3. Crackmapexec: Automates the active directory of networks. This can be used for Password Spraying, Credential Validation and Command Execution.
+4. Hydra: A well-known login cracker that is used for Brute Force Attacks.
 
-I will go into detail regarding the steps taken. First we will go over the initial reconnaissance, identifying avenues of exploitation, exploitation foothold, then post exploitation.
+I will go into detail regarding the steps taken. We will go over the initial reconnaissance, identifying avenues of exploitation, exploitation foothold, then post exploitation.
 
-### Initial Reconnisance
+### Initial Reconnaissance
 As with the first step of any HTB challenge, or penetration test, is to do a network scan. Below is a screenshot of the Nmap findings.
 
 ```bash
@@ -32,7 +32,7 @@ PORT     STATE SERVICE
 
 It is interesting to see that port 6791 is open. After research, I found that hnm is Halcyon Network Manager. I went to the page and saw a login page for a ReportLab/ReportHub login.
 
-This will be usefull for later. In the meantime, port 445 was open and was explored in hopes of finding an exploit. Crackmapexec was used to make an attempt to log in as a guest via smb.
+This will be useful for later. In the meantime, port 445 was open and was explored in hopes of finding an exploit. Crackmapexec was used to make an attempt to log in as a guest via smb.
 
 ```bash
 crackmapexec smb solarlab.htb -u Guest -p "" --shares
@@ -52,7 +52,7 @@ SMB         solarlab.htb    445    SOLARLAB         IPC$            READ        
 }
 ```
 
-Suprisingly we don't need a password as a guest login, and we see that we have access to the share drive, along with some documents.
+Surprisingly we don't need a password as a guest login, and we see that we have access to the share drive, along with some documents.
 
 
 ```bash
@@ -83,7 +83,7 @@ After looking at the details-file.xlsx, we see that we have a list of logins, so
 
 
 
-Now that it is posible to access port 445 anonymously, we can use crackmapexec to brute force Relative Identifiers.
+Now that it is possible to access port 445 anonymously, we can use crackmapexec to brute force Relative Identifiers.
 
 ```bash
 crackmapexec smb solarlab.htb -u anonymous -p '' --rid-brute
@@ -118,13 +118,13 @@ hydra -l BlakeB -P /home/kali/wordlist/solarlabs_wl_pass.txt report.solarlab.htb
 
 ```
 
-Now we are able to log into the ReportHub Dashboard.
+Now we can log into the ReportHub Dashboard.
 
 ![blakeb_dashboard](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/dcb4d6a1-d80f-405b-b22d-745acca5e1ea)
 
 ## Post-Exploitation
 
-After some analysis, each of the options generate a pdf. There is a vulnrability (CVE-2023-33733) that will exploit the pdf generating ability, of which will allow us to get a reverse shell into the local network.
+After some analysis, each of the options generates a pdf. There is a vulnerability (CVE-2023-33733) that will exploit the pdf generating ability, which will allow us to get a reverse shell into the local network.
 
 To do so, I simply used a reverse shell generator and plugged in the payload into the python script.
 
@@ -133,7 +133,7 @@ For simplicity, here are the steps used to get the reverse shell:
 1. Used a Reverse Shell Generator: https://www.revshells.com/
 2. Plug in the payload (illustrated below) in the python script: https://github.com/c53elyas/CVE-2023-33733
    ![payload_python](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/f1b423e7-747c-449f-9c06-c081c69fae6b)
-3. After this set up, since Its possible to intercept, and alter the Training Request text and plug the malicious script.
+3. After this set up, since it’s possible to intercept, and alter the Training Request text and plug the malicious script.
    ![payload_packet intercept](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/73b59298-5761-4f65-8e3d-83f371a37b3d)
 4. Before we Forward the response, we set up a listener on port 4444 (Or the port you set up a netcat listener).
 ```bash
@@ -141,7 +141,7 @@ sudo rlwrap nc -lnvp 4444
 
 ```
 
-After completing these above steps, we not have a foothold within the network.
+After completing these above steps, we have a foothold within the network.
 ![foothold_solar_lab](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/85edbe45-1b2f-405c-b131-1b6fb6ffce5c)
 
 
@@ -152,7 +152,7 @@ From our foothold, we see that we are logged in as the user blake.
 
 ## Foothold
 
-With the foothold estabilished, we begin to explore directories. In doing so, we are able to capture the user flag.
+With the foothold established, we begin to explore directories. In doing so, we are able to capture the user flag.
 
 ![userflag_found](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/5ac39860-546c-421f-9c9c-14e967856df1)
 
@@ -171,20 +171,20 @@ As this is not the most flattering snapshot, we can deduct the following informa
 
 ```
 
-However, in order to escalate our privaleges, we will have to pivot to another user in hopes to further escalate our privaleges.
+However, to escalate our privileges, we will have to pivot to another user in hopes to further escalate our privileges.
 
 ## Pivoting 
 
-When exploring, we discovered a user named openfire via the Get-LocalUser command. After some googling, we discover that openfire is a instant messaging and group chat server. The Services that Openfire provides run on ports 9090 and 9091.
+When exploring, we discovered a user named openfire via the Get-LocalUser command. After some googling, we discovered that openfire is an instant messaging and group chat server. The Services that Openfire provides run on ports 9090 and 9091.
 
-I confirmed this via the command below, which gives us a IP and port of of 127.0.0.1:9090.
+I confirmed this via the command below, which gives us a IP and port of 127.0.0.1:9090.
 ```
 C:\users\blake\desktop> netstat -ano | findstr "9090"
 
   TCP    127.0.0.1:9090         0.0.0.0:0              LISTENING       2244
 
 ```
-In order to get access to openfire, we will have to navigate to port 9090 or port 9091. We will have to tunnel via reverse port forwarding to those ports. To help us, Chisel is a great tool that helps with reverse port forwarding. We can simply clone the respratory from github, execute the build, then upload the windows.exe to execute the port forwarding.
+To get access to openfire, we will have to navigate to port 9090 or port 9091. We will have to tunnel via reverse port forwarding to those ports. To help us, Chisel is a great tool that helps with reverse port forwarding. We can simply clone the respiratory from GitHub, execute the build, then upload the windows.exe to execute the port forwarding.
 
 ![chisel build](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/99cb98ad-0103-44e1-bf88-1f8d752bfa14)
 
@@ -195,7 +195,7 @@ Attacker Machine (our Machine):
 ![port forward](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/61738fa0-309b-4995-9bfa-dedf125173cd)
 
 
-Victim Machine (command hilighted below):
+Victim Machine (command highlighted below):
 ![port forward windows_final_cmd](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/ad4fc910-1c6f-4b68-93cc-4ea6408ab6ab)
 
 
@@ -204,7 +204,7 @@ Once we see a connection on the attacking machine's side, after typing localhost
 ![Openfire_login](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/ccdb2904-c4e5-4e6c-87b6-71243ddb8475)
 
 
-Eventhough we don't have any leads regarding logins specific to a Openfire login, we can use an exploit via CVE-2023-32315 which can bypass the authentication.
+Even though we don't have any leads regarding logins specific to a Openfire login, we can use an exploit via CVE-2023-32315 which can bypass the authentication.
 
 ![CVE_2023_32315](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/6c89ee42-5b9e-43fa-a5f6-9535b3141b0b)
 
@@ -214,7 +214,7 @@ Now we have a user name and password we can use to log into openfire.
 ![password for openfire via CVE_2023_3215](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/f842cc9a-1aa2-4bb1-9374-cb837859ece1)
 
 
-Once we use our credentials we are greeted with the openfire GUI.
+Once we use our credentials, we are greeted with the openfire GUI.
 
 ![openfire_we_are_in](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/046a66d4-a263-49ca-90d9-82444f688836)
 
@@ -241,7 +241,7 @@ We have officially pivoted from blake to openfire. After looking around in the d
 
 ![image](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/686a2f50-5cb8-41ee-9e5e-341e907dde2f)
 
-We also discover a password key in openfire.script. We can easily decript the openfire password hash via the openfire_decrypt tool in the link below. Once we have that, we will have the administrator password.
+We also discovered a password key in openfire.script. We can easily decrypt the openfire password hash via the openfire_decrypt tool in the link below. Once we have that, we will have the administrator password.
 
 https://github.com/c0rdis/openfire_decrypt?source=post_page-----05ea59f2b950--------------------------------
 
@@ -249,7 +249,7 @@ Given how unstable the shell was for this lab, I searched for the root file to c
 
 ![search for root](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/307e9c9e-bff4-4040-ba48-e3dfcf578682)
 
-After confirmation, I ran another command as administrator to pull the rootflag.
+After confirmation, I ran another command as administrator to pull the root flag.
 
 
 ![root_flag_copy](https://github.com/theryeguy92/HTB-Solar-Lab/assets/103153678/30a144ab-8751-4972-9089-d871b5e2a5ce)
